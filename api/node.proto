@@ -14,13 +14,17 @@ service Node {
 }
 
 message NodeItem {
+    string uuid = 1;
+    string name = 2;
 }
 
 message UpdateNodeReq {
     string uuid = 1;
 }
 
-message UpdateNodeReply {}
+message UpdateNodeReply {
+    NodeItem item = 1;
+}
 
 message ListNodeReq {}
 
