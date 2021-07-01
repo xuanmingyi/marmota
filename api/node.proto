@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option go_package = "api/node;api";
+
+service Node {
+    // 添加&&更新节点数据
+    rpc UpdateNode(UpdateNodeReq) returns (UpdateNodeReply) {}
+
+    // 列出所有节点数据
+    rpc ListNode(ListNodeReq) returns (ListNodeReply) {}
+
+    // 删除节点
+    rpc DeleteNode(DeleteNodeReq) returns (DeleteNodeReply) {}
+}
+
+message NodeItem {
+}
+
+message UpdateNodeReq {
+    string uuid = 1;
+}
+
+message UpdateNodeReply {}
+
+message ListNodeReq {}
+
+message ListNodeReply {}
+
+message DeleteNodeReq {}
+
+message DeleteNodeReply {}
