@@ -14,22 +14,38 @@ service Node {
 }
 
 message NodeItem {
-    string uuid = 1;
-    string name = 2;
+    int64 id = 1;
+    string uuid = 2;
+    string name = 3;
+    string metadata = 4;
+    string desc = 5;
+    int64 create_at = 6;
+    int64 updated_at = 7;
 }
 
 message UpdateNodeReq {
-    string uuid = 1;
-}
-
-message UpdateNodeReply {
     NodeItem item = 1;
 }
 
-message ListNodeReq {}
+message UpdateNodeReply {
+    int64 ret = 1;
+    string msg = 2;
+}
 
-message ListNodeReply {}
+message ListNodeReq {
+}
 
-message DeleteNodeReq {}
+message ListNodeReply {
+    int64 ret = 1;
+    string msg = 2;
+    repeated NodeItem items = 3;
+}
 
-message DeleteNodeReply {}
+message DeleteNodeReq {
+    int64 id = 1;
+}
+
+message DeleteNodeReply {
+    int64 ret = 1;
+    string msg = 2;
+}

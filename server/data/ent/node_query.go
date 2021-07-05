@@ -84,8 +84,8 @@ func (nq *NodeQuery) FirstX(ctx context.Context) *Node {
 
 // FirstID returns the first Node ID from the query.
 // Returns a *NotFoundError when no Node ID was found.
-func (nq *NodeQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (nq *NodeQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = nq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -97,7 +97,7 @@ func (nq *NodeQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (nq *NodeQuery) FirstIDX(ctx context.Context) int {
+func (nq *NodeQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := nq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -135,8 +135,8 @@ func (nq *NodeQuery) OnlyX(ctx context.Context) *Node {
 // OnlyID is like Only, but returns the only Node ID in the query.
 // Returns a *NotSingularError when exactly one Node ID is not found.
 // Returns a *NotFoundError when no entities are found.
-func (nq *NodeQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (nq *NodeQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = nq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -152,7 +152,7 @@ func (nq *NodeQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (nq *NodeQuery) OnlyIDX(ctx context.Context) int {
+func (nq *NodeQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := nq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,8 +178,8 @@ func (nq *NodeQuery) AllX(ctx context.Context) []*Node {
 }
 
 // IDs executes the query and returns a list of Node IDs.
-func (nq *NodeQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
+func (nq *NodeQuery) IDs(ctx context.Context) ([]int64, error) {
+	var ids []int64
 	if err := nq.Select(node.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func (nq *NodeQuery) IDs(ctx context.Context) ([]int, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (nq *NodeQuery) IDsX(ctx context.Context) []int {
+func (nq *NodeQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := nq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -249,6 +249,19 @@ func (nq *NodeQuery) Clone() *NodeQuery {
 
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		UUID string `json:"uuid,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Node.Query().
+//		GroupBy(node.FieldUUID).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (nq *NodeQuery) GroupBy(field string, fields ...string) *NodeGroupBy {
 	group := &NodeGroupBy{config: nq.config}
 	group.fields = append([]string{field}, fields...)
@@ -263,6 +276,17 @@ func (nq *NodeQuery) GroupBy(field string, fields ...string) *NodeGroupBy {
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		UUID string `json:"uuid,omitempty"`
+//	}
+//
+//	client.Node.Query().
+//		Select(node.FieldUUID).
+//		Scan(ctx, &v)
+//
 func (nq *NodeQuery) Select(field string, fields ...string) *NodeSelect {
 	nq.fields = append([]string{field}, fields...)
 	return &NodeSelect{NodeQuery: nq}
@@ -329,7 +353,7 @@ func (nq *NodeQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   node.Table,
 			Columns: node.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt64,
 				Column: node.FieldID,
 			},
 		},

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"marmota/server/data/ent/node"
 	"marmota/server/data/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -23,6 +24,42 @@ type NodeUpdate struct {
 // Where adds a new predicate for the NodeUpdate builder.
 func (nu *NodeUpdate) Where(ps ...predicate.Node) *NodeUpdate {
 	nu.mutation.predicates = append(nu.mutation.predicates, ps...)
+	return nu
+}
+
+// SetUUID sets the "uuid" field.
+func (nu *NodeUpdate) SetUUID(s string) *NodeUpdate {
+	nu.mutation.SetUUID(s)
+	return nu
+}
+
+// SetName sets the "name" field.
+func (nu *NodeUpdate) SetName(s string) *NodeUpdate {
+	nu.mutation.SetName(s)
+	return nu
+}
+
+// SetMetadata sets the "metadata" field.
+func (nu *NodeUpdate) SetMetadata(s string) *NodeUpdate {
+	nu.mutation.SetMetadata(s)
+	return nu
+}
+
+// SetDesc sets the "desc" field.
+func (nu *NodeUpdate) SetDesc(s string) *NodeUpdate {
+	nu.mutation.SetDesc(s)
+	return nu
+}
+
+// SetCreateAt sets the "create_at" field.
+func (nu *NodeUpdate) SetCreateAt(t time.Time) *NodeUpdate {
+	nu.mutation.SetCreateAt(t)
+	return nu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (nu *NodeUpdate) SetUpdatedAt(t time.Time) *NodeUpdate {
+	nu.mutation.SetUpdatedAt(t)
 	return nu
 }
 
@@ -88,7 +125,7 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   node.Table,
 			Columns: node.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt64,
 				Column: node.FieldID,
 			},
 		},
@@ -99,6 +136,48 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := nu.mutation.UUID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldUUID,
+		})
+	}
+	if value, ok := nu.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldName,
+		})
+	}
+	if value, ok := nu.mutation.Metadata(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldMetadata,
+		})
+	}
+	if value, ok := nu.mutation.Desc(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldDesc,
+		})
+	}
+	if value, ok := nu.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldCreateAt,
+		})
+	}
+	if value, ok := nu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldUpdatedAt,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, nu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -117,6 +196,42 @@ type NodeUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *NodeMutation
+}
+
+// SetUUID sets the "uuid" field.
+func (nuo *NodeUpdateOne) SetUUID(s string) *NodeUpdateOne {
+	nuo.mutation.SetUUID(s)
+	return nuo
+}
+
+// SetName sets the "name" field.
+func (nuo *NodeUpdateOne) SetName(s string) *NodeUpdateOne {
+	nuo.mutation.SetName(s)
+	return nuo
+}
+
+// SetMetadata sets the "metadata" field.
+func (nuo *NodeUpdateOne) SetMetadata(s string) *NodeUpdateOne {
+	nuo.mutation.SetMetadata(s)
+	return nuo
+}
+
+// SetDesc sets the "desc" field.
+func (nuo *NodeUpdateOne) SetDesc(s string) *NodeUpdateOne {
+	nuo.mutation.SetDesc(s)
+	return nuo
+}
+
+// SetCreateAt sets the "create_at" field.
+func (nuo *NodeUpdateOne) SetCreateAt(t time.Time) *NodeUpdateOne {
+	nuo.mutation.SetCreateAt(t)
+	return nuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (nuo *NodeUpdateOne) SetUpdatedAt(t time.Time) *NodeUpdateOne {
+	nuo.mutation.SetUpdatedAt(t)
+	return nuo
 }
 
 // Mutation returns the NodeMutation object of the builder.
@@ -188,7 +303,7 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 			Table:   node.Table,
 			Columns: node.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt64,
 				Column: node.FieldID,
 			},
 		},
@@ -216,6 +331,48 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := nuo.mutation.UUID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldUUID,
+		})
+	}
+	if value, ok := nuo.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldName,
+		})
+	}
+	if value, ok := nuo.mutation.Metadata(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldMetadata,
+		})
+	}
+	if value, ok := nuo.mutation.Desc(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldDesc,
+		})
+	}
+	if value, ok := nuo.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldCreateAt,
+		})
+	}
+	if value, ok := nuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldUpdatedAt,
+		})
 	}
 	_node = &Node{config: nuo.config}
 	_spec.Assign = _node.assignValues

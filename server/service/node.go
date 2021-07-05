@@ -7,7 +7,8 @@ import (
 
 func (s *NodeService) UpdateNode(ctx context.Context, req *api.UpdateNodeReq) (*api.UpdateNodeReply, error) {
 	return &api.UpdateNodeReply{
-		Item: &api.NodeItem{Uuid: "sssssssssssss", Name: "ddddddddddddddddddddd"},
+		Ret: 0,
+		Msg: "ok",
 	}, nil
 }
 

@@ -6,15 +6,28 @@ import (
 	"fmt"
 	"marmota/server/data/ent/node"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 )
 
 // Node is the model entity for the Node schema.
 type Node struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
+	// UUID holds the value of the "uuid" field.
+	UUID string `json:"uuid,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
+	// Metadata holds the value of the "metadata" field.
+	Metadata string `json:"metadata,omitempty"`
+	// Desc holds the value of the "desc" field.
+	Desc string `json:"desc,omitempty"`
+	// CreateAt holds the value of the "create_at" field.
+	CreateAt time.Time `json:"create_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -24,6 +37,10 @@ func (*Node) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case node.FieldID:
 			values[i] = new(sql.NullInt64)
+		case node.FieldUUID, node.FieldName, node.FieldMetadata, node.FieldDesc:
+			values[i] = new(sql.NullString)
+		case node.FieldCreateAt, node.FieldUpdatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Node", columns[i])
 		}
@@ -44,7 +61,43 @@ func (n *Node) assignValues(columns []string, values []interface{}) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			n.ID = int(value.Int64)
+			n.ID = int64(value.Int64)
+		case node.FieldUUID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field uuid", values[i])
+			} else if value.Valid {
+				n.UUID = value.String
+			}
+		case node.FieldName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name", values[i])
+			} else if value.Valid {
+				n.Name = value.String
+			}
+		case node.FieldMetadata:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field metadata", values[i])
+			} else if value.Valid {
+				n.Metadata = value.String
+			}
+		case node.FieldDesc:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field desc", values[i])
+			} else if value.Valid {
+				n.Desc = value.String
+			}
+		case node.FieldCreateAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field create_at", values[i])
+			} else if value.Valid {
+				n.CreateAt = value.Time
+			}
+		case node.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				n.UpdatedAt = value.Time
+			}
 		}
 	}
 	return nil
@@ -73,6 +126,18 @@ func (n *Node) String() string {
 	var builder strings.Builder
 	builder.WriteString("Node(")
 	builder.WriteString(fmt.Sprintf("id=%v", n.ID))
+	builder.WriteString(", uuid=")
+	builder.WriteString(n.UUID)
+	builder.WriteString(", name=")
+	builder.WriteString(n.Name)
+	builder.WriteString(", metadata=")
+	builder.WriteString(n.Metadata)
+	builder.WriteString(", desc=")
+	builder.WriteString(n.Desc)
+	builder.WriteString(", create_at=")
+	builder.WriteString(n.CreateAt.Format(time.ANSIC))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(n.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -10,7 +10,13 @@ import (
 var (
 	// NodesColumns holds the columns for the "nodes" table.
 	NodesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "uuid", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString},
+		{Name: "metadata", Type: field.TypeString},
+		{Name: "desc", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
 	}
 	// NodesTable holds the schema information for the "nodes" table.
 	NodesTable = &schema.Table{

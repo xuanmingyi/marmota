@@ -4,8 +4,10 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"marmota/server/data/ent/node"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -16,6 +18,48 @@ type NodeCreate struct {
 	config
 	mutation *NodeMutation
 	hooks    []Hook
+}
+
+// SetUUID sets the "uuid" field.
+func (nc *NodeCreate) SetUUID(s string) *NodeCreate {
+	nc.mutation.SetUUID(s)
+	return nc
+}
+
+// SetName sets the "name" field.
+func (nc *NodeCreate) SetName(s string) *NodeCreate {
+	nc.mutation.SetName(s)
+	return nc
+}
+
+// SetMetadata sets the "metadata" field.
+func (nc *NodeCreate) SetMetadata(s string) *NodeCreate {
+	nc.mutation.SetMetadata(s)
+	return nc
+}
+
+// SetDesc sets the "desc" field.
+func (nc *NodeCreate) SetDesc(s string) *NodeCreate {
+	nc.mutation.SetDesc(s)
+	return nc
+}
+
+// SetCreateAt sets the "create_at" field.
+func (nc *NodeCreate) SetCreateAt(t time.Time) *NodeCreate {
+	nc.mutation.SetCreateAt(t)
+	return nc
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (nc *NodeCreate) SetUpdatedAt(t time.Time) *NodeCreate {
+	nc.mutation.SetUpdatedAt(t)
+	return nc
+}
+
+// SetID sets the "id" field.
+func (nc *NodeCreate) SetID(i int64) *NodeCreate {
+	nc.mutation.SetID(i)
+	return nc
 }
 
 // Mutation returns the NodeMutation object of the builder.
@@ -69,6 +113,24 @@ func (nc *NodeCreate) SaveX(ctx context.Context) *Node {
 
 // check runs all checks and user-defined validators on the builder.
 func (nc *NodeCreate) check() error {
+	if _, ok := nc.mutation.UUID(); !ok {
+		return &ValidationError{Name: "uuid", err: errors.New("ent: missing required field \"uuid\"")}
+	}
+	if _, ok := nc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
+	}
+	if _, ok := nc.mutation.Metadata(); !ok {
+		return &ValidationError{Name: "metadata", err: errors.New("ent: missing required field \"metadata\"")}
+	}
+	if _, ok := nc.mutation.Desc(); !ok {
+		return &ValidationError{Name: "desc", err: errors.New("ent: missing required field \"desc\"")}
+	}
+	if _, ok := nc.mutation.CreateAt(); !ok {
+		return &ValidationError{Name: "create_at", err: errors.New("ent: missing required field \"create_at\"")}
+	}
+	if _, ok := nc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New("ent: missing required field \"updated_at\"")}
+	}
 	return nil
 }
 
@@ -80,8 +142,10 @@ func (nc *NodeCreate) sqlSave(ctx context.Context) (*Node, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _node.ID == 0 {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
+	}
 	return _node, nil
 }
 
@@ -91,11 +155,63 @@ func (nc *NodeCreate) createSpec() (*Node, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: node.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt64,
 				Column: node.FieldID,
 			},
 		}
 	)
+	if id, ok := nc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
+	if value, ok := nc.mutation.UUID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldUUID,
+		})
+		_node.UUID = value
+	}
+	if value, ok := nc.mutation.Name(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldName,
+		})
+		_node.Name = value
+	}
+	if value, ok := nc.mutation.Metadata(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldMetadata,
+		})
+		_node.Metadata = value
+	}
+	if value, ok := nc.mutation.Desc(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: node.FieldDesc,
+		})
+		_node.Desc = value
+	}
+	if value, ok := nc.mutation.CreateAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldCreateAt,
+		})
+		_node.CreateAt = value
+	}
+	if value, ok := nc.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: node.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
 	return _node, _spec
 }
 
@@ -138,8 +254,10 @@ func (ncb *NodeCreateBulk) Save(ctx context.Context) ([]*Node, error) {
 				if err != nil {
 					return nil, err
 				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
+				if nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {

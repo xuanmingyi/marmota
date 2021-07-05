@@ -7,6 +7,18 @@ const (
 	Label = "node"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldUUID holds the string denoting the uuid field in the database.
+	FieldUUID = "uuid"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldMetadata holds the string denoting the metadata field in the database.
+	FieldMetadata = "metadata"
+	// FieldDesc holds the string denoting the desc field in the database.
+	FieldDesc = "desc"
+	// FieldCreateAt holds the string denoting the create_at field in the database.
+	FieldCreateAt = "create_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 	// Table holds the table name of the node in the database.
 	Table = "nodes"
 )
@@ -14,6 +26,12 @@ const (
 // Columns holds all SQL columns for node fields.
 var Columns = []string{
 	FieldID,
+	FieldUUID,
+	FieldName,
+	FieldMetadata,
+	FieldDesc,
+	FieldCreateAt,
+	FieldUpdatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

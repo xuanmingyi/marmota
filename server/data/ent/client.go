@@ -168,7 +168,7 @@ func (c *NodeClient) UpdateOne(n *Node) *NodeUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *NodeClient) UpdateOneID(id int) *NodeUpdateOne {
+func (c *NodeClient) UpdateOneID(id int64) *NodeUpdateOne {
 	mutation := newNodeMutation(c.config, OpUpdateOne, withNodeID(id))
 	return &NodeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -185,7 +185,7 @@ func (c *NodeClient) DeleteOne(n *Node) *NodeDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *NodeClient) DeleteOneID(id int) *NodeDeleteOne {
+func (c *NodeClient) DeleteOneID(id int64) *NodeDeleteOne {
 	builder := c.Delete().Where(node.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -200,12 +200,12 @@ func (c *NodeClient) Query() *NodeQuery {
 }
 
 // Get returns a Node entity by its id.
-func (c *NodeClient) Get(ctx context.Context, id int) (*Node, error) {
+func (c *NodeClient) Get(ctx context.Context, id int64) (*Node, error) {
 	return c.Query().Where(node.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *NodeClient) GetX(ctx context.Context, id int) *Node {
+func (c *NodeClient) GetX(ctx context.Context, id int64) *Node {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
