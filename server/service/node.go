@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"marmota/api"
 )
 
 func (s *NodeService) UpdateNode(ctx context.Context, req *api.UpdateNodeReq) (*api.UpdateNodeReply, error) {
+	fmt.Println(req)
 	return &api.UpdateNodeReply{
 		Ret: 0,
 		Msg: "ok",
