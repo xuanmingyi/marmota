@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd agent && mkdir -p bin && go build -o bin/ ./... && ./bin/agent 
+cd agent && mkdir -p bin && go build -o bin/ ./... && ./bin/agent
