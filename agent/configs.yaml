@@ -1,0 +1,11 @@
+server:
+  uri: localhost:50051
+
+agent:
+  interval: 10
+  uuid: 475fffc2-5297-4c4c-93c6-1671806f9867
+  name: win10
+  desc: 这是我的win10机器
+  metadata:
+    aa: bb
+    cc: dd
