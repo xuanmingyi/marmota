@@ -11,9 +11,9 @@ type Data struct {
 	db *ent.Client
 }
 
-func NewData() (*Data, func(), error) {
+func NewData(driver string, dsn string) (*Data, func(), error) {
 	client, err := ent.Open(
-		"mysql", "root:123456@tcp(127.0.0.1:3306)/newdb1?parseTime=true",
+		driver, dsn,
 	)
 
 	if err != nil {

@@ -1,0 +1,16 @@
+registry:
+  etcd:
+    addr: 127.0.0.1:8118
+
+data:
+  database:
+    driver: mysql
+    source: root:123456@tcp(127.0.0.1:3306)/newdb1?parseTime=true
+  etcd:
+    addr: 127.0.0.1:8118
+
+agent:
+  interval: 1s
+  uuid: 475fffc2-5297-4c4c-93c6-1671806f9867
+  name: mywin-10
+  desc: 我的win10机器
